@@ -5,6 +5,15 @@ import {
   Key, Mail, User, LogOut, CheckCircle2, ShieldCheck, Sparkles, HelpCircle, Loader2
 } from 'lucide-react';
 
+import { 
+  ComandosView, 
+  AplicativosView, 
+  TarefasView, 
+  InformacoesView, 
+  RotinaView, 
+  ConfiguracoesView 
+} from './components/MainViews';
+
 export default function App() {
   // ESTADOS DE AUTENTICAÇÃO
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -426,7 +435,7 @@ export default function App() {
             <Menu className="w-5 h-5" />
           </button>
 
-          <div className="flex items-center gap-3 cursor-pointer group">
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setActiveTab('Inicio')}>
             <div className="relative w-8 h-8 rounded-full border border-cyan-400 flex items-center justify-center shadow-[0_0_10px_#00f0ff]">
               <div className="w-4 h-4 rounded-full border border-cyan-300 animate-ping absolute opacity-50" />
               <span className="text-[10px] font-bold text-cyan-400">J</span>
@@ -458,150 +467,164 @@ export default function App() {
         </div>
       </header>
 
-      {/* CONTEÚDO PRINCIPAL COMPACTO */}
-      <div className="grid grid-cols-12 gap-3 my-3 flex-1 items-stretch">
-        
-        {/* ÁREA CENTRAL INTEGRADA: REATOR + ESCUTA POR HOTWORD */}
-        <div className="col-span-12 lg:col-span-8 bg-[#09101f]/80 border border-cyan-500/20 rounded-2xl p-6 flex flex-col items-center justify-between backdrop-blur-md relative overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.05)]">
+      {/* ÁREA DE CONTEÚDO DINÂMICA */}
+      {activeTab === 'Inicio' && (
+        <div className="grid grid-cols-12 gap-3 my-3 flex-1 items-stretch">
           
-          {/* TOPO DO PAINEL CENTRAL */}
-          <div className="w-full flex items-center justify-between border-b border-cyan-500/15 pb-3">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-              <span className="text-xs font-bold text-cyan-300 tracking-wider uppercase font-mono">
-                Escuta Contínua
-              </span>
-            </div>
-            <div className="text-[10px] text-slate-400 font-mono">
-              Ativação: <strong className="text-cyan-400">"Jarvis"</strong>
-            </div>
-          </div>
-
-          {/* CÍRCULO DO JARVIS */}
-          <div className="flex flex-col items-center justify-center my-auto py-4">
-            <div className="relative flex items-center justify-center">
-              <div className="w-56 h-56 rounded-full border border-cyan-500/20 animate-spin absolute" style={{ animationDuration: '20s' }} />
-              <div className="w-48 h-48 rounded-full border-2 border-dashed border-cyan-400/40 animate-spin absolute" style={{ animationDirection: 'reverse', animationDuration: '12s' }} />
-              <div className="w-36 h-36 rounded-full bg-cyan-500/10 animate-ping absolute opacity-30" />
-
-              <div className="w-36 h-36 rounded-full border-4 border-cyan-400 shadow-[0_0_40px_#00f0ff] flex flex-col items-center justify-center bg-[#050b15] z-10">
-                <span className="font-bold tracking-[0.25em] text-cyan-300 text-sm">J.A.R.V.I.S</span>
-                <span className="text-[9px] text-cyan-400/70 font-mono mt-1">SEMPRE ATIVO</span>
-              </div>
-            </div>
-
-            {/* ONDAS SONORAS */}
-            <div className="flex items-center gap-1.5 h-8 mt-6">
-              {[30, 60, 20, 85, 40, 100, 70, 90, 30, 80, 50, 95, 40, 70, 20, 60].map((h, i) => (
-                <div 
-                  key={i} 
-                  className="w-1 rounded-full bg-cyan-400 animate-pulse"
-                  style={{ height: `${h}%`, animationDelay: `${i * 0.07}s` }} 
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* INTERAÇÃO DE TEXTO */}
-          <div className="w-full space-y-2">
-            <div className="bg-[#050b15]/90 border border-cyan-500/20 rounded-xl p-3 space-y-2">
-              <div className="flex items-start justify-between text-xs">
-                <div className="flex items-center gap-2 text-slate-300">
-                  <Mic className="w-3.5 h-3.5 text-cyan-400" />
-                  <span className="text-[11px]">
-                    <strong className="text-cyan-400 font-mono">{user?.name || 'Você'}:</strong> "Jarvis, abra o YouTube e toque uma música."
-                  </span>
-                </div>
-                <span className="text-[9px] text-slate-500 font-mono">{formattedTime.slice(0, 5)}</span>
-              </div>
-
-              <div className="flex items-start justify-between text-xs pt-2 border-t border-slate-800/80">
-                <div className="flex items-center gap-2 text-slate-200">
-                  <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-[11px]">
-                    <strong className="text-emerald-400 font-mono">JARVIS:</strong> "Com certeza, senhor. Executando o comando agora."
-                  </span>
-                </div>
-                <span className="text-[9px] text-slate-500 font-mono">{formattedTime.slice(0, 5)}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 bg-[#080e1a] border border-cyan-500/20 rounded-xl px-3 py-2">
-              <Mic className="w-4 h-4 text-cyan-400 animate-pulse" />
-              <input
-                type="text"
-                placeholder="Diga 'Jarvis' ou digite um comando..."
-                className="bg-transparent text-xs text-white outline-none flex-1 placeholder:text-slate-500"
-              />
-              <Send className="w-3.5 h-3.5 text-cyan-400 cursor-pointer hover:scale-110 transition-transform" />
-            </div>
-          </div>
-
-        </div>
-
-        {/* COLUNA DIREITA: FRASES, CLIMA E APPS */}
-        <div className="col-span-12 lg:col-span-4 flex flex-col gap-3">
-          
-          {/* CARD DE FRASES */}
-          <div className="rounded-2xl border border-cyan-500/20 bg-[#070d18] p-4 text-center relative overflow-hidden backdrop-blur-md">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
-            <p className="text-xs italic text-slate-300 relative z-10 leading-relaxed">
-              "Não é a vida que te define, mas as escolhas que você faz todos os dias."
-            </p>
-            <p className="text-[10px] text-cyan-400 font-bold mt-2 relative z-10 tracking-widest">— J.A.R.V.I.S</p>
-          </div>
-
-          {/* CLIMA */}
-          <div className="bg-[#09101f]/80 border border-cyan-500/15 rounded-2xl p-4 backdrop-blur-md">
-            <div className="flex justify-between items-center mb-1">
-              <h3 className="text-xs font-bold text-white">Clima Local</h3>
-              <span className="text-[10px] text-slate-400">São José - RN</span>
-            </div>
+          {/* ÁREA CENTRAL INTEGRADA: REATOR + ESCUTA POR HOTWORD */}
+          <div className="col-span-12 lg:col-span-8 bg-[#09101f]/80 border border-cyan-500/20 rounded-2xl p-6 flex flex-col items-center justify-between backdrop-blur-md relative overflow-hidden shadow-[0_0_30px_rgba(0,240,255,0.05)]">
             
-            <div className="flex items-center justify-between my-2">
-              <div className="flex items-center gap-2.5">
-                <Sun className="w-8 h-8 text-yellow-400 animate-spin-slow" />
-                <div>
-                  <div className="text-xl font-bold text-white font-mono">27°C</div>
-                  <div className="text-[10px] text-slate-300">Céu limpo</div>
+            {/* TOPO DO PAINEL CENTRAL */}
+            <div className="w-full flex items-center justify-between border-b border-cyan-500/15 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                <span className="text-xs font-bold text-cyan-300 tracking-wider uppercase font-mono">
+                  Escuta Contínua
+                </span>
+              </div>
+              <div className="text-[10px] text-slate-400 font-mono">
+                Ativação: <strong className="text-cyan-400">"Jarvis"</strong>
+              </div>
+            </div>
+
+            {/* CÍRCULO DO JARVIS */}
+            <div className="flex flex-col items-center justify-center my-auto py-4">
+              <div className="relative flex items-center justify-center">
+                <div className="w-56 h-56 rounded-full border border-cyan-500/20 animate-spin absolute" style={{ animationDuration: '20s' }} />
+                <div className="w-48 h-48 rounded-full border-2 border-dashed border-cyan-400/40 animate-spin absolute" style={{ animationDirection: 'reverse', animationDuration: '12s' }} />
+                <div className="w-36 h-36 rounded-full bg-cyan-500/10 animate-ping absolute opacity-30" />
+
+                <div className="w-36 h-36 rounded-full border-4 border-cyan-400 shadow-[0_0_40px_#00f0ff] flex flex-col items-center justify-center bg-[#050b15] z-10">
+                  <span className="font-bold tracking-[0.25em] text-cyan-300 text-sm">J.A.R.V.I.S</span>
+                  <span className="text-[9px] text-cyan-400/70 font-mono mt-1">SEMPRE ATIVO</span>
                 </div>
               </div>
-              <div className="text-[10px] text-slate-400 text-right space-y-0.5 font-mono">
-                <div>Umidade: 62%</div>
-                <div>Vento: 14 km/h</div>
-                <div>Máx: 32° | Min: 21°</div>
+
+              {/* ONDAS SONORAS */}
+              <div className="flex items-center gap-1.5 h-8 mt-6">
+                {[30, 60, 20, 85, 40, 100, 70, 90, 30, 80, 50, 95, 40, 70, 20, 60].map((h, i) => (
+                  <div 
+                    key={i} 
+                    className="w-1 rounded-full bg-cyan-400 animate-pulse"
+                    style={{ height: `${h}%`, animationDelay: `${i * 0.07}s` }} 
+                  />
+                ))}
               </div>
             </div>
-          </div>
 
-          {/* APLICATIVOS RÁPIDOS */}
-          <div className="bg-[#09101f]/80 border border-cyan-500/15 rounded-2xl p-4 backdrop-blur-md flex-1">
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-xs font-bold text-white">Aplicativos Rápidos</h3>
-              <span className="text-[10px] text-slate-400">Atalhos</span>
-            </div>
-            
-            <div className="grid grid-cols-4 gap-3 text-center">
-              {quickApps.map((app, i) => {
-                const Icon = app.icon;
-                return (
-                  <div key={i} className="flex flex-col items-center gap-1.5 cursor-pointer group">
-                    <div className={`w-10 h-10 rounded-xl ${app.color} border border-white/10 flex items-center justify-center group-hover:scale-105 group-hover:border-cyan-400/50 transition-all shadow-sm`}>
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <span className="text-[9px] text-slate-400 group-hover:text-white transition-colors">{app.name}</span>
+            {/* INTERAÇÃO DE TEXTO */}
+            <div className="w-full space-y-2">
+              <div className="bg-[#050b15]/90 border border-cyan-500/20 rounded-xl p-3 space-y-2">
+                <div className="flex items-start justify-between text-xs">
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <Mic className="w-3.5 h-3.5 text-cyan-400" />
+                    <span className="text-[11px]">
+                      <strong className="text-cyan-400 font-mono">{user?.name || 'Você'}:</strong> "Jarvis, abra o YouTube e toque uma música."
+                    </span>
                   </div>
-                );
-              })}
+                  <span className="text-[9px] text-slate-500 font-mono">{formattedTime.slice(0, 5)}</span>
+                </div>
+
+                <div className="flex items-start justify-between text-xs pt-2 border-t border-slate-800/80">
+                  <div className="flex items-center gap-2 text-slate-200">
+                    <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-[11px]">
+                      <strong className="text-emerald-400 font-mono">JARVIS:</strong> "Com certeza, senhor. Executando o comando agora."
+                    </span>
+                  </div>
+                  <span className="text-[9px] text-slate-500 font-mono">{formattedTime.slice(0, 5)}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 bg-[#080e1a] border border-cyan-500/20 rounded-xl px-3 py-2">
+                <Mic className="w-4 h-4 text-cyan-400 animate-pulse" />
+                <input
+                  type="text"
+                  placeholder="Diga 'Jarvis' ou digite um comando..."
+                  className="bg-transparent text-xs text-white outline-none flex-1 placeholder:text-slate-500"
+                />
+                <Send className="w-3.5 h-3.5 text-cyan-400 cursor-pointer hover:scale-110 transition-transform" />
+              </div>
             </div>
+
+          </div>
+
+          {/* COLUNA DIREITA: FRASES, CLIMA E APPS */}
+          <div className="col-span-12 lg:col-span-4 flex flex-col gap-3">
+            
+            {/* CARD DE FRASES */}
+            <div className="rounded-2xl border border-cyan-500/20 bg-[#070d18] p-4 text-center relative overflow-hidden backdrop-blur-md">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
+              <p className="text-xs italic text-slate-300 relative z-10 leading-relaxed">
+                "Não é a vida que te define, mas as escolhas que você faz todos os dias."
+              </p>
+              <p className="text-[10px] text-cyan-400 font-bold mt-2 relative z-10 tracking-widest">— J.A.R.V.I.S</p>
+            </div>
+
+            {/* CLIMA */}
+            <div className="bg-[#09101f]/80 border border-cyan-500/15 rounded-2xl p-4 backdrop-blur-md">
+              <div className="flex justify-between items-center mb-1">
+                <h3 className="text-xs font-bold text-white">Clima Local</h3>
+                <span className="text-[10px] text-slate-400">São José - RN</span>
+              </div>
+              
+              <div className="flex items-center justify-between my-2">
+                <div className="flex items-center gap-2.5">
+                  <Sun className="w-8 h-8 text-yellow-400 animate-spin-slow" />
+                  <div>
+                    <div className="text-xl font-bold text-white font-mono">27°C</div>
+                    <div className="text-[10px] text-slate-300">Céu limpo</div>
+                  </div>
+                </div>
+                <div className="text-[10px] text-slate-400 text-right space-y-0.5 font-mono">
+                  <div>Umidade: 62%</div>
+                  <div>Vento: 14 km/h</div>
+                  <div>Máx: 32° | Min: 21°</div>
+                </div>
+              </div>
+            </div>
+
+            {/* APLICATIVOS RÁPIDOS */}
+            <div className="bg-[#09101f]/80 border border-cyan-500/15 rounded-2xl p-4 backdrop-blur-md flex-1">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-xs font-bold text-white">Aplicativos Rápidos</h3>
+                <span className="text-[10px] text-slate-400">Atalhos</span>
+              </div>
+              
+              <div className="grid grid-cols-4 gap-3 text-center">
+                {quickApps.map((app, i) => {
+                  const Icon = app.icon;
+                  return (
+                    <div key={i} className="flex flex-col items-center gap-1.5 cursor-pointer group">
+                      <div className={`w-10 h-10 rounded-xl ${app.color} border border-white/10 flex items-center justify-center group-hover:scale-105 group-hover:border-cyan-400/50 transition-all shadow-sm`}>
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <span className="text-[9px] text-slate-400 group-hover:text-white transition-colors">{app.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
           </div>
 
         </div>
+      )}
 
-      </div>
+      {/* DEMAIS ABAS DO SISTEMA */}
+      {activeTab !== 'Inicio' && (
+        <div className="my-3 flex-1 flex flex-col">
+          {activeTab === 'Comandos' && <ComandosView />}
+          {activeTab === 'Aplicativos' && <AplicativosView />}
+          {activeTab === 'Tarefas' && <TarefasView />}
+          {activeTab === 'Informacoes' && <InformacoesView />}
+          {activeTab === 'Rotina' && <RotinaView />}
+          {activeTab === 'Configuracoes' && <ConfiguracoesView />}
+        </div>
+      )}
 
       {/* FOOTER */}
-      <footer className="bg-[#09101f]/90 border border-cyan-500/20 rounded-2xl px-5 py-2.5 flex items-center justify-between backdrop-blur-md">
+      <header className="bg-[#09101f]/90 border border-cyan-500/20 rounded-2xl px-5 py-2.5 flex items-center justify-between backdrop-blur-md">
         <div className="flex items-center gap-3">
           <div className="w-5 h-5 rounded-full border border-cyan-400 flex items-center justify-center text-[9px] font-bold text-cyan-300">
             J
@@ -623,7 +646,7 @@ export default function App() {
         <div className="text-right hidden sm:block">
           <p className="text-[10px] italic text-slate-300">"Sempre pronto para o próximo comando."</p>
         </div>
-      </footer>
+      </header>
 
     </div>
   );
