@@ -315,6 +315,7 @@ export default function App() {
               <p>📍 Fale <strong className="text-cyan-400">"JARVIS"</strong>.</p>
               <p>📍 Ele responderá: <strong className="text-emerald-400">"Olá senhor, como posso ajudar?"</strong></p>
               <p>📍 Em seguida, fale seu comando normalmente.</p>
+              <p>USE ESSA CHAVE: JVS-MASTER-777</p>
             </div>
           </div>
         </div>

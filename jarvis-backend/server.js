@@ -53,11 +53,11 @@ async function callGroq(userMessage) {
   const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+      "Authorization": `Bearer ${process.env.GROQ_API_KEY.trim()}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: "llama-3.1-8b-instant",
+      model: "llama3-8b-8192",
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: userMessage }
@@ -65,7 +65,11 @@ async function callGroq(userMessage) {
     })
   });
 
-  if (!response.ok) throw new Error(`Groq status ${response.status}`);
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Groq status ${response.status} - ${errorBody}`);
+  }
+
   const data = await response.json();
   return data.choices?.[0]?.message?.content;
 }
@@ -73,7 +77,8 @@ async function callGroq(userMessage) {
 async function callGemini(userMessage) {
   if (!process.env.GEMINI_API_KEY) throw new Error("Chave GEMINI_API_KEY ausente no .env");
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+  const apiKey = process.env.GEMINI_API_KEY.trim();
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
   
   const response = await fetch(url, {
     method: "POST",
@@ -83,7 +88,11 @@ async function callGemini(userMessage) {
     })
   });
 
-  if (!response.ok) throw new Error(`Gemini status ${response.status}`);
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`Gemini status ${response.status} - ${errorBody}`);
+  }
+
   const data = await response.json();
   return data.candidates?.[0]?.content?.parts?.[0]?.text;
 }
@@ -94,11 +103,11 @@ async function callOpenRouter(userMessage) {
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY.trim()}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: "meta-llama/llama-3.3-70b-instruct:free",
+      model: "openrouter/auto",
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: userMessage }
@@ -106,7 +115,11 @@ async function callOpenRouter(userMessage) {
     })
   });
 
-  if (!response.ok) throw new Error(`OpenRouter status ${response.status}`);
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(`OpenRouter status ${response.status} - ${errorBody}`);
+  }
+
   const data = await response.json();
   return data.choices?.[0]?.message?.content;
 }
